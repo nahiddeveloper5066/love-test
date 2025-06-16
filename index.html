@@ -311,6 +311,53 @@
             margin-right: 5px;
         }
         
+        /* Facebook Profile Link Styles */
+        .profile-link-container {
+            margin: 15px 0;
+            display: none;
+        }
+        
+        .profile-link-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            text-align: center;
+            color: #8a1c4a;
+            font-size: 1.1rem;
+        }
+        
+        .profile-link {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #3b5998;
+            color: white;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .profile-link i {
+            margin-right: 8px;
+        }
+        
+        .profile-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+            background: #2d4373;
+        }
+        
+        .share-text {
+            margin-top: 15px;
+            font-weight: bold;
+            color: #8a1c4a;
+        }
+        
         @media (max-width: 600px) {
             h1 {
                 font-size: 2rem;
@@ -337,6 +384,12 @@
                 width: 100%;
                 max-width: 250px;
             }
+            
+            .profile-link {
+                max-width: 90%;
+                font-size: 0.9rem;
+                padding: 8px 15px;
+            }
         }
     </style>
 </head>
@@ -359,6 +412,11 @@
             <input type="text" id="name2" placeholder="দ্বিতীয় নাম লিখুন...">
         </div>
         
+        <div class="input-group">
+            <label for="facebookLink"><i class="fab fa-facebook"></i> আপনার ফেসবুক প্রোফাইল লিংক (ঐচ্ছিক)</label>
+            <input type="url" id="facebookLink" placeholder="https://www.facebook.com/your.profile...">
+        </div>
+        
         <button id="actionBtn"><i class="fas fa-play"></i> শুরু করুন</button>
         
         <div class="result-container" id="resultContainer">
@@ -367,6 +425,14 @@
             <div class="message" id="message"></div>
             <div class="riddle" id="riddle"></div>
             
+            <div class="profile-link-container" id="profileLinkContainer">
+                <p class="profile-link-label">আপনার ফেসবুক প্রোফাইল লিংক:</p>
+                <a href="#" class="profile-link" id="profileLink" target="_blank">
+                    <i class="fab fa-facebook"></i> <span id="profileLinkText"></span>
+                </a>
+            </div>
+            
+            <p class="share-text">ফলাফল শেয়ার করুন:</p>
             <div class="share-container">
                 <a href="#" class="share-btn youtube-btn" id="youtubeBtn" target="_blank">
                     <i class="fab fa-youtube"></i> ইউটিউব চ্যানেল
@@ -391,10 +457,14 @@
             const facebookBtn = document.getElementById('facebookBtn');
             const heartsContainer = document.getElementById('heartsContainer');
             const resultEmoji = document.getElementById('resultEmoji');
+            const facebookLinkInput = document.getElementById('facebookLink');
+            const profileLinkContainer = document.getElementById('profileLinkContainer');
+            const profileLink = document.getElementById('profileLink');
+            const profileLinkText = document.getElementById('profileLinkText');
             
             let clickCount = 0;
             let lovePercentage = 0;
-            let names = { name1: "", name2: "" };
+            let names = { name1: "", name2: "", facebookLink: "" };
             
             // Create floating hearts
             function createHearts() {
@@ -492,6 +562,7 @@
             actionBtn.addEventListener('click', function() {
                 const name1 = document.getElementById('name1').value.trim();
                 const name2 = document.getElementById('name2').value.trim();
+                const facebookLink = facebookLinkInput.value.trim();
                 
                 if (!name1 || !name2) {
                     alert('দয়া করে দুটি নামই লিখুন!');
@@ -500,8 +571,8 @@
                 
                 // First click - go to YouTube
                 if (clickCount === 0) {
-                    // Save names for later
-                    names = { name1, name2 };
+                    // Save names and Facebook link for later
+                    names = { name1, name2, facebookLink };
                     
                     // Calculate love percentage (but don't show yet)
                     lovePercentage = calculateLove(name1, name2);
@@ -512,59 +583,4 @@
                     
                     // Redirect to YouTube
                     window.open('https://www.profitableratecpm.com/iavfw6ka9?key=61500854d7f5fae7306882631f38d8d3', '_blank');
-                    
-                    // Show notification
-                    alert('প্রেথমে এডস দেখে আনলক করুন ! এখন "ফলাফল দেখুন" বাটনে ক্লিক করুন।');
-                } 
-                // Second click - show result
-                else if (clickCount === 1) {
-                    // Show result container
-                    resultContainer.style.display = 'block';
-                    
-                    // Reset percentage for animation
-                    percentageElement.textContent = '0%';
-                    
-                    // Animate percentage counter
-                    setTimeout(() => {
-                        animatePercentage(lovePercentage);
-                    }, 300);
-                    
-                    // Set message, riddle and emoji
-                    setTimeout(() => {
-                        messageElement.textContent = getMessage(lovePercentage);
-                        riddleElement.textContent = getRandomRiddle();
-                        resultEmoji.textContent = getEmoji(lovePercentage);
-                        
-                        // Set social media URLs
-                        const shareMessage = `আমার এবং ${names.name1} এর মধ্যে ভালোবাসার হার হলো ${lovePercentage}%! দেখুন আপনার কত?`;
-                        const shareUrl = encodeURIComponent(window.location.href);
-                        
-                        youtubeBtn.href = 'https://www.profitableratecpm.com/iavfw6ka9?key=61500854d7f5fae7306882631f38d8d3';
-                        facebookBtn.href = `https://www.facebook.com/sharer/sharer.php?u=${shareUrl}&quote=${encodeURIComponent(shareMessage)}`;
-                    }, 1500);
-                    
-                    // Change button text
-                    actionBtn.innerHTML = '<i class="fas fa-redo"></i> আবার চেষ্টা করুন';
-                    clickCount = 2;
-                }
-                // Third click - reset
-                else {
-                    // Reset everything
-                    document.getElementById('name1').value = '';
-                    document.getElementById('name2').value = '';
-                    resultContainer.style.display = 'none';
-                    actionBtn.innerHTML = '<i class="fas fa-play"></i> শুরু করুন';
-                    clickCount = 0;
-                    lovePercentage = 0;
-                }
-            });
-            
-            // Initialize the floating hearts
-            createHearts();
-            
-            // Add more hearts every 15 seconds
-            setInterval(createHearts, 15000);
-        });
-    </script>
-</body>
-</html>
+  
