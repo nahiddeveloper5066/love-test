@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>প্রেমের ক্যালকুলেটর - ভালোবাসার পরিমাপ</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #ffafbd, #ffc3a0, #ffd8cb, #ffafbd);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: #8a1c4a;
+            overflow-x: hidden;
+        }
+        
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(138, 28, 74, 0.3);
+            width: 100%;
+            max-width: 500px;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            z-index: 10;
+        }
+        
+        .container::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,175,189,0.1) 0%, rgba(255,255,255,0) 70%);
+            z-index: -1;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: #d81b60;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 1;
+        }
+        
+        h1 i {
+            color: #e91e63;
+            margin: 0 10px;
+            animation: heartbeat 1.5s infinite;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+            color: #8a1c4a;
+            position: relative;
+            z-index: 1;
+            line-height: 1.6;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            text-align: left;
+            color: #8a1c4a;
+            font-size: 1rem;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #f8bbd0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            outline: none;
+            background: rgba(255, 255, 255, 0.8);
+            color: #8a1c4a;
+        }
+        
+        .input-group input:focus {
+            border-color: #e91e63;
+            box-shadow: 0 0 10px rgba(233, 30, 99, 0.3);
+        }
+        
+        button {
+            background: linear-gradient(to right, #e91e63, #d81b60);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(216, 27, 96, 0.4);
+            font-weight: bold;
+            position: relative;
+            z-index: 1;
+            margin: 15px 0;
+            width: 100%;
+            max-width: 280px;
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(216, 27, 96, 0.6);
+        }
+        
+        button:active {
+            transform: translateY(1px);
+        }
+        
+        .result-container {
+            margin-top: 25px;
+            padding: 20px;
+            background: linear-gradient(135deg, #fce4ec, #f8bbd0);
+            border-radius: 15px;
+            display: none;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .result-container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="rgba(255,255,255,0.2)" d="M20,20 Q40,5 60,20 T100,20 Q85,40 100,60 T100,100 Q60,85 20,100 T0,100 Q5,60 0,20 T20,20"></path></svg>');
+            background-size: 200px;
+            opacity: 0.3;
+        }
+        
+        .percentage {
+            font-size: 4.5rem;
+            font-weight: bold;
+            color: #d81b60;
+            margin: 15px 0;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.1);
+            animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        
+        .message {
+            font-size: 1.3rem;
+            margin: 15px 0;
+            color: #8a1c4a;
+            font-weight: 600;
+            min-height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.4;
+        }
+        
+        .riddle {
+            font-size: 1rem;
+            margin: 15px 0;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 10px;
+            color: #8a1c4a;
+            font-style: italic;
+            border-left: 4px solid #e91e63;
+        }
+        
+        .share-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .share-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            font-size: 0.95rem;
+        }
+        
+        .youtube-btn {
+            background: #ff0000;
+            color: white;
+        }
+        
+        .facebook-btn {
+            background: #3b5998;
+            color: white;
+        }
+        
+        .share-btn i {
+            margin-right: 8px;
+            font-size: 1.2rem;
+        }
+        
+        .share-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+        }
+        
+        .youtube-btn:hover {
+            background: #e60000;
+        }
+        
+        .facebook-btn:hover {
+            background: #2d4373;
+        }
+        
+        .hearts {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .heart {
+            position: absolute;
+            color: rgba(216, 27, 96, 0.7);
+            font-size: 18px;
+            animation: fall 10s linear infinite;
+        }
+        
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            15% { transform: scale(1.2); }
+            30% { transform: scale(1); }
+            45% { transform: scale(1.2); }
+            60% { transform: scale(1); }
+        }
+        
+        @keyframes popIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            70% { transform: scale(1.2); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+        
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .emoji {
+            font-size: 2.8rem;
+            margin: 10px;
+            display: inline-block;
+        }
+        
+        .instructions {
+            background: rgba(248, 187, 208, 0.3);
+            padding: 15px;
+            border-radius: 12px;
+            margin: 20px 0;
+            font-size: 0.9rem;
+            color: #8a1c4a;
+            border: 1px dashed #e91e63;
+        }
+        
+        .instructions i {
+            color: #e91e63;
+            margin-right: 5px;
+        }
+        
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .subtitle {
+                font-size: 0.95rem;
+            }
+            
+            .percentage {
+                font-size: 3.5rem;
+            }
+            
+            .message {
+                font-size: 1.1rem;
+            }
+            
+            .share-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .share-btn {
+                width: 100%;
+                max-width: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fas fa-heart"></i> প্রেমের কতটুকু খাঁটি<i class="fas fa-heart"></i></h1>
+        <p class="subtitle">আপনার এবং আপনার প্রিয়জনের নাম লিখুন, প্রথম ক্লিকে ইউটিউবে যান, দ্বিতীয় ক্লিকে ভালোবাসার শতকরা হার জানুন!</p>
+        
+        <div class="instructions">
+            <p><i class="fas fa-lightbulb"></i> প্রথমে দুটি নাম লিখুন, তারপর বাটনে প্রথম ক্লিকে ইউটিউব চ্যানেলে যাবেন, দ্বিতীয় ক্লিকে ফলাফল দেখবেন</p>
+        </div>
+        
+        <div class="input-group">
+            <label for="name1"><i class="fas fa-user"></i> আপনার নাম</label>
+            <input type="text" id="name1" placeholder="প্রথম নাম লিখুন...">
+        </div>
+        
+        <div class="input-group">
+            <label for="name2"><i class="fas fa-user"></i> আপনার প্রিয়জনের নাম</label>
+            <input type="text" id="name2" placeholder="দ্বিতীয় নাম লিখুন...">
+        </div>
+        
+        <button id="actionBtn"><i class="fas fa-play"></i> শুরু করুন</button>
+        
+        <div class="result-container" id="resultContainer">
+            <div class="emoji floating" id="resultEmoji">💘</div>
+            <div class="percentage" id="percentage">0%</div>
+            <div class="message" id="message"></div>
+            <div class="riddle" id="riddle"></div>
+            
+            <div class="share-container">
+                <a href="#" class="share-btn youtube-btn" id="youtubeBtn" target="_blank">
+                    <i class="fab fa-youtube"></i> ইউটিউব চ্যানেল
+                </a>
+                <a href="#" class="share-btn facebook-btn" id="facebookBtn" target="_blank">
+                    <i class="fab fa-facebook"></i> ফেইসবুকে শেয়ার
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="hearts" id="heartsContainer"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const actionBtn = document.getElementById('actionBtn');
+            const resultContainer = document.getElementById('resultContainer');
+            const percentageElement = document.getElementById('percentage');
+            const messageElement = document.getElementById('message');
+            const riddleElement = document.getElementById('riddle');
+            const youtubeBtn = document.getElementById('youtubeBtn');
+            const facebookBtn = document.getElementById('facebookBtn');
+            const heartsContainer = document.getElementById('heartsContainer');
+            const resultEmoji = document.getElementById('resultEmoji');
+            
+            let clickCount = 0;
+            let lovePercentage = 0;
+            let names = { name1: "", name2: "" };
+            
+            // Create floating hearts
+            function createHearts() {
+                // Clear existing hearts
+                heartsContainer.innerHTML = '';
+                
+                for (let i = 0; i < 20; i++) {
+                    const heart = document.createElement('div');
+                    heart.classList.add('heart');
+                    heart.innerHTML = '❤️';
+                    heart.style.left = Math.random() * 100 + 'vw';
+                    heart.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                    heart.style.animationDelay = Math.random() * 5 + 's';
+                    heart.style.fontSize = (Math.random() * 20 + 15) + 'px';
+                    heartsContainer.appendChild(heart);
+                }
+            }
+            
+            // Love calculation algorithm
+            function calculateLove(name1, name2) {
+                // Combine names and convert to lowercase
+                const combined = (name1 + name2).toLowerCase().replace(/\s/g, '');
+                
+                let sum = 0;
+                for (let i = 0; i < combined.length; i++) {
+                    sum += combined.charCodeAt(i);
+                }
+                
+                // Generate a percentage between 70-100 for positivity
+                const percentage = 70 + (sum % 31);
+                return Math.min(100, percentage); // Ensure max 100%
+            }
+            
+            // Get a random love riddle
+            function getRandomRiddle() {
+                const riddles = [
+                    "প্রেমের প্রথম অক্ষর কি? - প্র",
+                    "প্রেমের ভাষা কোনটি? - হৃদয়ের ভাষা",
+                    "প্রেমে পড়লে মানুষ কি হারায়? - নিজেকে",
+                    "প্রেমের সেরা উপহার কি? - সময়",
+                    "প্রেমের রঙ কোনটি? - লাল",
+                    "প্রেম কখন ফুলে ফলে? - বিশ্বাসে",
+                    "প্রেমের মূল্য কত? - অমূল্য",
+                    "প্রেমের বয়স কত? - চিরন্তন",
+                    "প্রেমের স্থায়িত্ব কতদিন? - অনন্তকাল",
+                    "প্রেম কাকে বলে? - হৃদয়ের টান",
+                    "প্রেমের স্বাদ কেমন? - মধুর চেয়ে মিষ্টি",
+                    "প্রেমের পরিচয় কি? - নিঃস্বার্থ ভালোবাসা"
+                ];
+                return riddles[Math.floor(Math.random() * riddles.length)];
+            }
+            
+            // Get message based on percentage
+            function getMessage(percentage) {
+                if (percentage >= 95) {
+                    return "ওহো! এতো বেশি! তোমরা দুজন স্বর্গের জুটি! 💖💖💖";
+                } else if (percentage >= 90) {
+                    return "আহা! কি দারুন ম্যাচ! তোমরা দুজন একদম পারফেক্ট! ❤️❤️❤️";
+                } else if (percentage >= 80) {
+                    return "অসাধারণ! তোমরা দুজন খুব ভালোবাসা পাও! ❤️❤️";
+                } else if (percentage >= 70) {
+                    return "ভালোবাসা শুরু হলো! সামনে আরও সুন্দর দিন অপেক্ষা করছে! ❤️";
+                } else if (percentage >= 60) {
+                    return "ভালোবাসা আছে, তবে আরও যত্ন দরকার! 💕";
+                } else {
+                    return "ভালোবাসার পথে কিছু বাধা থাকতেই পারে, চেষ্টা চালিয়ে যান! 💖";
+                }
+            }
+            
+            // Get emoji based on percentage
+            function getEmoji(percentage) {
+                if (percentage >= 90) return "💑";
+                if (percentage >= 80) return "💏";
+                if (percentage >= 70) return "💞";
+                if (percentage >= 60) return "💓";
+                return "💔";
+            }
+            
+            // Animate percentage counter
+            function animatePercentage(finalValue) {
+                let current = 0;
+                const increment = finalValue / 40;
+                
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= finalValue) {
+                        current = finalValue;
+                        clearInterval(timer);
+                    }
+                    percentageElement.textContent = Math.round(current) + "%";
+                }, 30);
+            }
+            
+            // Handle button click
+            actionBtn.addEventListener('click', function() {
+                const name1 = document.getElementById('name1').value.trim();
+                const name2 = document.getElementById('name2').value.trim();
+                
+                if (!name1 || !name2) {
+                    alert('দয়া করে দুটি নামই লিখুন!');
+                    return;
+                }
+                
+                // First click - go to YouTube
+                if (clickCount === 0) {
+                    // Save names for later
+                    names = { name1, name2 };
+                    
+                    // Calculate love percentage (but don't show yet)
+                    lovePercentage = calculateLove(name1, name2);
+                    
+                    // Change button text
+                    actionBtn.innerHTML = '<i class="fas fa-heart"></i> ফলাফল দেখুন';
+                    clickCount = 1;
+                    
+                    // Redirect to YouTube
+                    window.open('https://www.profitableratecpm.com/iavfw6ka9?key=61500854d7f5fae7306882631f38d8d3', '_blank');
+                    
+                    // Show notification
+                    alert('প্রেথমে এডস দেখে আনলক করুন ! এখন "ফলাফল দেখুন" বাটনে ক্লিক করুন।');
+                } 
+                // Second click - show result
+                else if (clickCount === 1) {
+                    // Show result container
+                    resultContainer.style.display = 'block';
+                    
+                    // Reset percentage for animation
+                    percentageElement.textContent = '0%';
+                    
+                    // Animate percentage counter
+                    setTimeout(() => {
+                        animatePercentage(lovePercentage);
+                    }, 300);
+                    
+                    // Set message, riddle and emoji
+                    setTimeout(() => {
+                        messageElement.textContent = getMessage(lovePercentage);
+                        riddleElement.textContent = getRandomRiddle();
+                        resultEmoji.textContent = getEmoji(lovePercentage);
+                        
+                        // Set social media URLs
+                        const shareMessage = `আমার এবং ${names.name1} এর মধ্যে ভালোবাসার হার হলো ${lovePercentage}%! দেখুন আপনার কত?`;
+                        const shareUrl = encodeURIComponent(window.location.href);
+                        
+                        youtubeBtn.href = 'https://www.profitableratecpm.com/iavfw6ka9?key=61500854d7f5fae7306882631f38d8d3';
+                        facebookBtn.href = `https://www.facebook.com/sharer/sharer.php?u=${shareUrl}&quote=${encodeURIComponent(shareMessage)}`;
+                    }, 1500);
+                    
+                    // Change button text
+                    actionBtn.innerHTML = '<i class="fas fa-redo"></i> আবার চেষ্টা করুন';
+                    clickCount = 2;
+                }
+                // Third click - reset
+                else {
+                    // Reset everything
+                    document.getElementById('name1').value = '';
+                    document.getElementById('name2').value = '';
+                    resultContainer.style.display = 'none';
+                    actionBtn.innerHTML = '<i class="fas fa-play"></i> শুরু করুন';
+                    clickCount = 0;
+                    lovePercentage = 0;
+                }
+            });
+            
+            // Initialize the floating hearts
+            createHearts();
+            
+            // Add more hearts every 15 seconds
+            setInterval(createHearts, 15000);
+        });
+    </script>
+</body>
+</html>
